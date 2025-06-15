@@ -25,9 +25,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="grid min-h-screen grid-cols-1 font-sans md:grid-cols-2">
+    <div
+      className="
+        grid min-h-screen grid-cols-1 font-sans md:grid-cols-2
+        bg-[url('/login-bg.webp')] bg-cover bg-center bg-fixed
+      "
+    >
       {/* Coluna do Formulário */}
-      <div className="flex flex-col items-center justify-center p-8 bg-white md:p-12">
+      <div className="flex flex-col items-center justify-center p-8 bg-white/0 md:p-12">
         <div className="w-full max-w-md space-y-8">
           <div>
             <h1 className="text-4xl font-bold tracking-tight text-slate-900">
@@ -85,13 +90,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Coluna da Imagem/Vídeo */}
-      <div className="flex items-center justify-center bg-slate-50">
-        {/* Você pode substituir este div por um componente <Image> do Next.js ou <video> */}
-        <div className="w-3/4 text-center">
-          <p className="text-2xl font-medium text-slate-400">SEU VÍDEO OU IMAGEM AQUI</p>
-        </div>
-      </div>
+      {/* Removido o wrapper de NextImage, pois agora o bg está no container */}
     </div>
   )
 }
