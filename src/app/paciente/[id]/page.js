@@ -162,19 +162,17 @@ const calculateAge = (birthDateString) => {
 
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-slate-800">Histórico</h2>
-            <div className="p-6 space-y-3 bg-white border rounded-xl border-slate-200">
-              {reports.map(report => (
-                <div 
-                  key={report.id}
-                  onClick={() => setViewingReport(report)}
-                  className={`block p-3 transition-all duration-150 border rounded-lg cursor-pointer ${viewingReport?.id === report.id ? 'bg-blue-100 border-blue-500' : 'border-slate-200 hover:bg-slate-50 hover:border-blue-400'}`}
-                >
-                  <p className="font-semibold text-slate-700">Relatório</p>
-                  <p className="text-sm text-slate-500">{new Date(report.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' })}</p>
-                </div>
-
-              ))}
-              
+            <div className="p-6 space-y-3 overflow-y-auto bg-white border rounded-xl border-slate-200 max-h-[600px]">
+               {reports.length > 0 ? reports.map(report => (
+                 <div 
+                   key={report.id}
+                   onClick={() => setViewingReport(report)}
+                   className={`block p-3 transition-all duration-150 border rounded-lg cursor-pointer ${viewingReport?.id === report.id ? 'bg-blue-100 border-blue-500' : 'border-slate-200 hover:bg-slate-50 hover:border-blue-400'}`}
+                 >
+                   <p className="font-semibold text-slate-700">Relatório</p>
+                   <p className="text-sm text-slate-500">{new Date(report.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' })}</p>
+                 </div>
+               )) : <p className="text-sm text-slate-400">Nenhum relatório anterior.</p>}
             </div>
           </div>
         </div>
