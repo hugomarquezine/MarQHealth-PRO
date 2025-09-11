@@ -417,6 +417,12 @@ const calculateAge = (birthDateString) => {
                 <div class="info-value">${patient.rotina_cuidados_pele || 'Nenhuma'}</div>
               </div>
             </div>
+            ${patient.observacoes_adicionais && patient.observacoes_adicionais.trim() ? `
+              <div class="info-item">
+                <div class="info-label">Observações Adicionais</div>
+                <div class="info-value">${patient.observacoes_adicionais.replace(/\n/g, '<br/>')}</div>
+              </div>
+            ` : ''}
           </div>
 
           <!-- Relatórios da Sessão -->
@@ -647,6 +653,12 @@ const calculateAge = (birthDateString) => {
                       <dt className="text-sm font-medium text-slate-500 mb-1">Rotina de Cuidados com a Pele</dt>
                       <dd className="text-base font-semibold text-slate-900">{patient.rotina_cuidados_pele || 'Nenhuma'}</dd>
                     </div>
+                    {patient.observacoes_adicionais && patient.observacoes_adicionais.trim() && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Observações Adicionais</dt>
+                        <dd className="text-base font-semibold text-slate-900 whitespace-pre-line">{patient.observacoes_adicionais}</dd>
+                      </div>
+                    )}
                   </dl>
                 </div>
               )}
