@@ -84,6 +84,14 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen font-sans bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {loadingPatientId && (
+        <div className="fixed inset-0 z-50 bg-white/70 backdrop-blur-sm flex items-center justify-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-slate-700 font-medium">Abrindo paciente...</span>
+          </div>
+        </div>
+      )}
       {/* Header moderno com gradiente */}
       <header className="bg-white/80 backdrop-blur-lg border-b border-slate-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -220,7 +228,7 @@ export default function DashboardPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {searchResults.map((patient) => (
                 <div key={patient.id} className="group">
-                  <Link href={`/paciente/${patient.id}`} className="block">
+                  <Link href={`/paciente/${patient.id}`} className="block" onClick={() => setLoadingPatientId(patient.id)}>
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-200 group-hover:scale-[1.02]">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">

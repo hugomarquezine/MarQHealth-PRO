@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import Link from 'next/link'
 import { checkMedicalAccess, getUserRole } from '@/lib/authUtils'
+import { shouldShowField, formatFieldValue } from '@/lib/fieldUtils'
 
 export default function PacientePage({ params }) {
   const [patient, setPatient] = useState(null)
@@ -575,18 +576,22 @@ const calculateAge = (birthDateString) => {
                       <dt className="text-sm font-medium text-slate-500 mb-1">Data de Nascimento</dt>
                       <dd className="text-base font-semibold text-slate-900">{patient.birth_date} ({calculateAge(patient.birth_date)} anos)</dd>
                     </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Gênero</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.gender || 'N/A'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Telefone</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.phone || 'N/A'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Instagram</dt>
-                      <dd className="text-base font-semibold text-slate-900">
-                        {patient.instagram ? (
+                    {shouldShowField(patient.gender) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Gênero</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.gender)}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.phone) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Telefone</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.phone)}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.instagram) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Instagram</dt>
+                        <dd className="text-base font-semibold text-slate-900">
                           <a 
                             href={`https://instagram.com/${patient.instagram.replace('@', '')}`} 
                             target="_blank" 
@@ -595,69 +600,91 @@ const calculateAge = (birthDateString) => {
                           >
                             @{patient.instagram.replace('@', '')}
                           </a>
-                        ) : 'N/A'}
-                      </dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Endereço Completo</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.endereco_completo || 'N/A'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Preferência de Tratamento</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.formality_preference || 'N/A'}</dd>
-                    </div>
+                        </dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.endereco_completo) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Endereço Completo</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.endereco_completo)}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.formality_preference) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Preferência de Tratamento</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.formality_preference)}</dd>
+                      </div>
+                    )}
 
                     {/* Informações de Como Conheceu a Clínica */}
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Como Conheceu a Clínica</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.como_conheceu_clinica || 'N/A'}</dd>
-                    </div>
-                    {patient.como_conheceu_clinica === 'Indicacao' && patient.nome_indicou && (
+                    {shouldShowField(patient.como_conheceu_clinica) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Como Conheceu a Clínica</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.como_conheceu_clinica)}</dd>
+                      </div>
+                    )}
+                    {patient.como_conheceu_clinica === 'Indicacao' && shouldShowField(patient.nome_indicou) && (
                       <div className="bg-white p-4 rounded-lg border border-slate-200">
                         <dt className="text-sm font-medium text-slate-500 mb-1">Nome de Quem Indicou</dt>
-                        <dd className="text-base font-semibold text-slate-900">{patient.nome_indicou}</dd>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.nome_indicou)}</dd>
                       </div>
                     )}
 
                     {/* Histórico Médico e Dermatológico */}
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Histórico Dermatológico</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.historico_dermatologico ? 'Sim' : 'Não'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Tratamentos Dermatológicos Realizados</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.tratamentos_realizados || 'Nenhum'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Outros Tratamentos Estéticos</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.outros_tratamentos || 'Nenhum'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Doença Crônica</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.doenca_cronica ? `Sim: ${patient.doenca_cronica_descricao}` : 'Não'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Medicamentos Contínuos</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.medicamentos_continuos ? `Sim: ${patient.medicamentos_descricao}` : 'Não'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Alergias</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.alergias ? `Sim: ${patient.alergias_descricao}` : 'Não'}</dd>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Histórico Familiar de Câncer de Pele</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.historico_cancer_pele_familia ? `Sim: ${patient.cancer_pele_familia_quem}` : 'Não'}</dd>
-                    </div>
+                    {shouldShowField(patient.historico_dermatologico) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Histórico Dermatológico</dt>
+                        <dd className="text-base font-semibold text-slate-900">{patient.historico_dermatologico ? 'Sim' : 'Não'}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.tratamentos_realizados) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Tratamentos Dermatológicos Realizados</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.tratamentos_realizados)}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.outros_tratamentos) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Outros Tratamentos Estéticos</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.outros_tratamentos)}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.doenca_cronica) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Doença Crônica</dt>
+                        <dd className="text-base font-semibold text-slate-900">{patient.doenca_cronica ? `Sim: ${patient.doenca_cronica_descricao}` : 'Não'}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.medicamentos_continuos) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Medicamentos Contínuos</dt>
+                        <dd className="text-base font-semibold text-slate-900">{patient.medicamentos_continuos ? `Sim: ${patient.medicamentos_descricao}` : 'Não'}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.alergias) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Alergias</dt>
+                        <dd className="text-base font-semibold text-slate-900">{patient.alergias ? `Sim: ${patient.alergias_descricao}` : 'Não'}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.historico_cancer_pele_familia) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Histórico Familiar de Câncer de Pele</dt>
+                        <dd className="text-base font-semibold text-slate-900">{patient.historico_cancer_pele_familia ? `Sim: ${patient.cancer_pele_familia_quem}` : 'Não'}</dd>
+                      </div>
+                    )}
 
                     {/* Hábitos e Rotina */}
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
-                      <dt className="text-sm font-medium text-slate-500 mb-1">Rotina de Cuidados com a Pele</dt>
-                      <dd className="text-base font-semibold text-slate-900">{patient.rotina_cuidados_pele || 'Nenhuma'}</dd>
-                    </div>
-                    {patient.observacoes_adicionais && patient.observacoes_adicionais.trim() && (
+                    {shouldShowField(patient.rotina_cuidados_pele) && (
+                      <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500 mb-1">Rotina de Cuidados com a Pele</dt>
+                        <dd className="text-base font-semibold text-slate-900">{formatFieldValue(patient.rotina_cuidados_pele)}</dd>
+                      </div>
+                    )}
+                    {shouldShowField(patient.observacoes_adicionais) && (
                       <div className="bg-white p-4 rounded-lg border border-slate-200 sm:col-span-2">
                         <dt className="text-sm font-medium text-slate-500 mb-1">Observações Adicionais</dt>
-                        <dd className="text-base font-semibold text-slate-900 whitespace-pre-line">{patient.observacoes_adicionais}</dd>
+                        <dd className="text-base font-semibold text-slate-900 whitespace-pre-line">{formatFieldValue(patient.observacoes_adicionais)}</dd>
                       </div>
                     )}
                   </dl>
